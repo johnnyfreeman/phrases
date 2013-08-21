@@ -22,7 +22,7 @@ Template.comment_edit.events = {
 		if(!Meteor.user()) throw 'You must be logged in.';
 
 		var selectedCommentId=Session.get('selectedCommentId');
-		var selectedPostId=Comments.findOne(selectedCommentId).post;
+		var selectedPhraseId=Comments.findOne(selectedCommentId).phrase;
 		var content = cleanUp(instance.editor.exportFile());
 
 		var commentId = Comments.update(selectedCommentId,
@@ -33,9 +33,9 @@ Template.comment_edit.events = {
 			}
 		);
 
-		trackEvent("edit comment", {'postId': selectedPostId, 'commentId': selectedCommentId});
+		trackEvent("edit comment", {'phraseId': selectedPhraseId, 'commentId': selectedCommentId});
 
-		Meteor.Router.to("/posts/"+selectedPostId+"/comment/"+selectedCommentId);
+		Meteor.Router.to("/phrases/"+selectedPhraseId+"/comment/"+selectedCommentId);
 	}
 
 	, 'click .delete-link': function(e){

@@ -3,19 +3,19 @@ Setting = FormModel.extend({
       
   blankSchema: {
     requireViewInvite: false,
-    requirePostInvite: false,
-    requirePostsApproval: false,
+    requirePhraseInvite: false,
+    requirePhrasesApproval: false,
     scoreUpdateInterval: '',
-    postInterval: '',
+    phraseInterval: '',
     commentInterval: '',
-    maxPostsPerDay: '',
+    maxPhrasesPerDay: '',
     title: '',
     tagline: '',
     logoUrl: '',
     logoHeight: '',
     logoWidth: '',
     defaultEmail: '',
-    newPostsNotifications: true,
+    newPhrasesNotifications: true,
     backgroundColor: '',
     secondaryColor: '',
     buttonColor: '',
@@ -35,8 +35,8 @@ Setting = FormModel.extend({
     this._super(Settings, options);
     this.overwriteTitle('scoreUpdateInterval', 'Scoring Frequency'); 
     this.overwriteTitle('requireViewInvite', 'Require Invite to view?');
-    this.overwriteTitle('requirePostInvite', 'Require Invite to post?');
-    this.overwriteTitle('requirePostsApproval', 'Posts must be approved by admin?');
+    this.overwriteTitle('requirePhraseInvite', 'Require Invite to phrase?');
+    this.overwriteTitle('requirePhrasesApproval', 'Phrases must be approved by admin?');
     this.overwriteTitle('title', 'Site Title');
     this.overwriteTitle('mixpanelId', '<a href="http://mixpanel.com/">Mixpanel</a> ID');
     this.overwriteTitle('clickyId', '<a href="http://getclicky.com/">Clicky</a> ID');

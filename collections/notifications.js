@@ -16,31 +16,31 @@ getNotification = function(event, properties, context){
   var p = properties;
   switch(event){
     case 'newReply':
-      notification.subject = 'Someone replied to your comment on "'+p.postHeadline+'"';
-      notification.text = p.commentAuthorName+' has replied to your comment on "'+p.postHeadline+'": '+getPostCommentUrl(p.postId, p.commentId);
-      notification.html = '<p><a href="'+getUserUrl(p.commentAuthorId)+'">'+p.commentAuthorName+'</a> has replied to your comment on "<a href="'+getPostCommentUrl(p.postId, p.commentId)+'" class="action-link">'+p.postHeadline+'</a>"</p>';
+      notification.subject = 'Someone replied to your comment on "'+p.phraseHeadline+'"';
+      notification.text = p.commentAuthorName+' has replied to your comment on "'+p.phraseHeadline+'": '+getPhraseCommentUrl(p.phraseId, p.commentId);
+      notification.html = '<p><a href="'+getUserUrl(p.commentAuthorId)+'">'+p.commentAuthorName+'</a> has replied to your comment on "<a href="'+getPhraseCommentUrl(p.phraseId, p.commentId)+'" class="action-link">'+p.phraseHeadline+'</a>"</p>';
       if(context === 'email')
-        notification.html += '<p>'+p.commentExcerpt+'</p><a href="'+getPostCommentUrl(p.postId, p.commentId)+'" class="action-link">Read more</a>';
+        notification.html += '<p>'+p.commentExcerpt+'</p><a href="'+getPhraseCommentUrl(p.phraseId, p.commentId)+'" class="action-link">Read more</a>';
     break;
 
     case 'newComment':
-      notification.subject = 'A new comment on your post "'+p.postHeadline+'"';
-      notification.text = 'You have a new comment by '+p.commentAuthorName+' on your post "'+p.postHeadline+'": '+getPostCommentUrl(p.postId, p.commentId);
-      notification.html = '<p><a href="'+getUserUrl(p.commentAuthorId)+'">'+p.commentAuthorName+'</a> left a new comment on your post "<a href="'+getPostCommentUrl(p.postId, p.commentId)+'" class="action-link">'+p.postHeadline+'</a>"</p>';
+      notification.subject = 'A new comment on your phrase "'+p.phraseHeadline+'"';
+      notification.text = 'You have a new comment by '+p.commentAuthorName+' on your phrase "'+p.phraseHeadline+'": '+getPhraseCommentUrl(p.phraseId, p.commentId);
+      notification.html = '<p><a href="'+getUserUrl(p.commentAuthorId)+'">'+p.commentAuthorName+'</a> left a new comment on your phrase "<a href="'+getPhraseCommentUrl(p.phraseId, p.commentId)+'" class="action-link">'+p.phraseHeadline+'</a>"</p>';
       if(context === 'email')
-        notification.html += '<p>'+p.commentExcerpt+'</p><a href="'+getPostCommentUrl(p.postId, p.commentId)+'" class="action-link">Read more</a>';
+        notification.html += '<p>'+p.commentExcerpt+'</p><a href="'+getPhraseCommentUrl(p.phraseId, p.commentId)+'" class="action-link">Read more</a>';
     break;
 
-    case 'newPost':
-      notification.subject = p.postAuthorName+' has created a new post: "'+p.postHeadline+'"';
-      notification.text = p.postAuthorName+' has created a new post: "'+p.postHeadline+'" '+getPostUrl(p.postId);
-      notification.html = '<a href="'+getUserUrl(p.postAuthorId)+'">'+p.postAuthorName+'</a> has created a new post: "<a href="'+getPostUrl(p.postId)+'" class="action-link">'+p.postHeadline+'</a>".';      
+    case 'newPhrase':
+      notification.subject = p.phraseAuthorName+' has created a new phrase: "'+p.phraseHeadline+'"';
+      notification.text = p.phraseAuthorName+' has created a new phrase: "'+p.phraseHeadline+'" '+getPhraseUrl(p.phraseId);
+      notification.html = '<a href="'+getUserUrl(p.phraseAuthorId)+'">'+p.phraseAuthorName+'</a> has created a new phrase: "<a href="'+getPhraseUrl(p.phraseId)+'" class="action-link">'+p.phraseHeadline+'</a>".';      
     break;
 
     case 'accountApproved':
       notification.subject = 'Your account has been approved.';
       notification.text = 'Welcome to '+getSetting('title')+'! Your account has just been approved.';
-      notification.html = 'Welcome to '+getSetting('title')+'!<br/> Your account has just been approved. <a href="'+Meteor.absoluteUrl()+'">Start posting.</a>';      
+      notification.html = 'Welcome to '+getSetting('title')+'!<br/> Your account has just been approved. <a href="'+Meteor.absoluteUrl()+'">Start phraseing.</a>';      
     break;
 
     default:

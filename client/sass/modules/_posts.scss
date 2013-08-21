@@ -2,9 +2,9 @@
 	text-align:center;
 	padding:10px 0;
 }
-.posts{
+.phrases{
 	position:relative;
-	.post{
+	.phrase{
 		position:relative;
 		width:100%;
 		@include cf;
@@ -12,24 +12,24 @@
 			@include single-transition(ease-out, top, 400ms, 0ms);
 		}
 		&.inactive{
-			.post-content, .post-actions li a{
+			.phrase-content, .phrase-actions li a{
 				background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVQYV2NkIALMnDlTkpGQOpCi9PT053gVwhSBDMOpEFkRToXoirAqxKYIQyEuRSgK8SmCKySkCKyQGEUghQC5OyXvW/4BHwAAAABJRU5ErkJggg==');
 			}
 		}
 	}
 }
-.post-content{
+.phrase-content{
 	position:relative;
 	@extend .grid-block;
 	padding:0;
 	min-height:$grid-unit - 30px;
 	// margin-right:240px;
 	margin-right:160px;
-	.post-info{
+	.phrase-info{
 		padding:$grid-padding - 2px $grid-padding;
 		margin-left:30px;
 	}
-	.post-rank{
+	.phrase-rank{
 		position:absolute;
 		top:0px;
 		left:-50px;
@@ -42,7 +42,7 @@
 		// font-weight:bold;
 		color:black(0.1);
 	}
-	.post-upvote{
+	.phrase-upvote{
 		position:absolute;
 		top:0px;
 		bottom:0px;
@@ -94,7 +94,7 @@
 			}
 		}
 	}
-	.post-sticky{
+	.phrase-sticky{
 		display:block;
 		position:absolute;
 		right:20px;
@@ -107,9 +107,9 @@
 			display:none;
 		}
 	}
-	.post-heading{
+	.phrase-heading{
 		margin-bottom:0px;
-		.post-title{
+		.phrase-title{
 			font-size:20px;
 			color:$text;
 			font-weight:normal;
@@ -121,12 +121,12 @@
 				color:$red;
 			}	
 		}
-		.post-domain{
+		.phrase-domain{
 			color:$light-text;
 			font-size:14px;
 			font-weight:normal;
 		}
-		.post-specialty{
+		.phrase-specialty{
 			display:inline-block;
 			font-size:11px;
 			@include border-radius(3px);
@@ -141,13 +141,13 @@
 			}
 		}
 	}
-	.post-meta{
+	.phrase-meta{
 		font-size:13px;
 		color:$light-text;
 		line-height:1.5;
 	}
 }
-.post-actions{
+.phrase-actions{
 	float:right;
 	padding:0;
 	li{
@@ -224,7 +224,7 @@
 		}
 	}
 }
-.post-message{
+.phrase-message{
 	@extend .grid-block;
 	padding:20px;
 	margin-bottom:$grid-margin;
@@ -281,11 +281,11 @@
 		}
 	}
 }
-.post.sticky{
-	.post-content, .post-actions li a{
+.phrase.sticky{
+	.phrase-content, .phrase-actions li a{
 		background:$light-yellow;
 	}
-	.post-actions li a:hover{
+	.phrase-actions li a:hover{
 		background:$highlight-color url("/img/bg-header.png") top center;
 	}	
 }

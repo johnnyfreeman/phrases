@@ -48,7 +48,7 @@ Meteor.methods({
     // send a notification to every site admin
     _.each(adminUsers(), function(user, index, list){
       if(user._id !== currentUser._id){
-        // don't send admins notifications for their own posts
+        // don't send admins notifications for their own phrases
         sendEmail(getEmail(user), notification.subject, notification.text, notification.html);
       }
     });

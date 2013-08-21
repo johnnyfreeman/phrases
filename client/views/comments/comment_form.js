@@ -17,9 +17,9 @@ Template.comment_form.events = {
     if(Meteor.Router.page()=='comment_reply'){
       // child comment
       var parentCommentId=Session.get('selectedCommentId');
-      var postId=Comments.findOne(parentCommentId).post;
+      var phraseId=Comments.findOne(parentCommentId).phrase;
 
-      Meteor.call('comment', postId, parentCommentId, content, function(error, commentProperties){
+      Meteor.call('comment', phraseId, parentCommentId, content, function(error, commentProperties){
           if(error){
               console.log(error);
               throwError(error.reason);
@@ -28,15 +28,15 @@ Template.comment_form.events = {
               trackEvent("newComment", commentProperties);
 
               Session.set('scrollToCommentId', commentProperties.commentId);
-              Meteor.Router.to('/posts/'+postId);
+              Meteor.Router.to('/phrases/'+phraseId);
           }
       });
     }else{
       // root comment
       var parentCommentId=null;        
-      var postId=Session.get('selectedPostId');
+      var phraseId=Session.get('selectedPhraseId');
 
-      Meteor.call('comment', postId, parentCommentId, content, function(error, commentProperties){
+      Meteor.call('comment', phraseId, parentCommentId, content, function(error, commentProperties){
           if(error){
               console.log(error);
               throwError(error.reason);

@@ -4,11 +4,11 @@ Template.footer.helpers({
   }, 
   distanceFromTop: function(){
     var distanceFromTop = parseInt(Session.get('distanceFromTop'))+70+20;
-    if(Meteor.Router.page()!='posts_digest' && !Session.get('allPostsLoaded'))
+    if(Meteor.Router.page()!='phrases_digest' && !Session.get('allPhrasesLoaded'))
       distanceFromTop += 70;
     return distanceFromTop;
   },
   footerClass: function(){
-    return Session.get('isPostsList') ? 'absolute' : 'static';
+    return Session.get('isPhrasesList') ? 'absolute' : 'static';
   }
 });

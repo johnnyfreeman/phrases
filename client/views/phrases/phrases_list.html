@@ -1,0 +1,32 @@
+<template name="phrases_list">
+	<div class="phrases grid list">
+		{{#each phrases}}
+			{{> phrase_item}}
+		{{/each}}
+	</div>
+  {{#if phrasesReady}}
+  	<div class="grid more-button {{#if allPhrasesLoaded}} hidden {{/if}}">
+  		<a class="more-link" href="#">Load more</a>
+  	</div>
+  {{else}}
+    <div>Loading... </div>
+  {{/if}}
+</template>
+
+<!-- and the various pages that use the above template -->
+<!-- XXX: makes me want to be able to set a context from the router... -->
+<template name="phrases_top">
+  {{> phrases_list topPhrasesHandle}}
+</template>
+
+<template name="phrases_new">
+  {{> phrases_list newPhrasesHandle}}
+</template>
+
+<template name="phrases_best">
+  {{> phrases_list bestPhrasesHandle}}
+</template>
+
+<template name="phrases_pending">
+  {{> phrases_list pendingPhrasesHandle}}
+</template>

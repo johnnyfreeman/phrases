@@ -1,8 +1,8 @@
-Template.post_page.helpers({
-  post: function(){
-    console.log('post page')
-    var post = Posts.findOne(Session.get('selectedPostId'));
-    return post;
+Template.phrase_page.helpers({
+  phrase: function(){
+    console.log('phrase page')
+    var phrase = Phrases.findOne(Session.get('selectedPhraseId'));
+    return phrase;
   },
   body_formatted: function(){
     var converter = new Markdown.Converter();
@@ -17,12 +17,12 @@ Template.post_page.helpers({
   }
 }); 
 
-Template.post_page.rendered = function(){
+Template.phrase_page.rendered = function(){
   if((scrollToCommentId=Session.get('scrollToCommentId')) && !this.rendered && $('#'+scrollToCommentId).exists()){
     scrollPageTo('#'+scrollToCommentId);
     Session.set('scrollToCommentId', null);
     this.rendered=true;
   }
 
-  document.title = Posts.findOne(Session.get('selectedPostId')).headline;
+  document.title = Phrases.findOne(Session.get('selectedPhraseId')).headline;
 }

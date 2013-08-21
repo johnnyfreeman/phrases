@@ -1,22 +1,22 @@
-// Template.post_edit.preserve(['#title', '#url', '#editor', '#sticky']);
+// Template.phrase_edit.preserve(['#title', '#url', '#editor', '#sticky']);
 
-// Template.post_edit.preserve({
+// Template.phrase_edit.preserve({
 //   // 'input[id]': function (node) { return node.id; }
 //    '[name]': function(node) { return node.getAttribute('name');}
 // });
 
-Template.post_edit.helpers({
-  post: function(){
-    return Posts.findOne(Session.get('selectedPostId'));
+Template.phrase_edit.helpers({
+  phrase: function(){
+    return Phrases.findOne(Session.get('selectedPhraseId'));
   },
   created: function(){
-    var post= Posts.findOne(Session.get('selectedPostId'));
-    return moment(post.createdAt).format("MMMM Do, h:mm:ss a");
+    var phrase= Phrases.findOne(Session.get('selectedPhraseId'));
+    return moment(phrase.createdAt).format("MMMM Do, h:mm:ss a");
   },
   specialties: function(){
-    var post = this;
+    var phrase = this;
     return Specialties.find().map(function(specialty) {
-      specialty.checked = _.contains(_.pluck(post.specialties, '_id'), specialty._id) ? 'checked' : '';
+      specialty.checked = _.contains(_.pluck(phrase.specialties, '_id'), specialty._id) ? 'checked' : '';
       return specialty;
     });
   },
@@ -28,8 +28,8 @@ Template.post_edit.helpers({
   },
   isSelected: function(){
     // console.log('isSelected?')
-    var post= Posts.findOne(Session.get('selectedPostId'));
-    return post && this._id == post.userId ? 'selected' : '';
+    var phrase= Phrases.findOne(Session.get('selectedPhraseId'));
+    return phrase && this._id == phrase.userId ? 'selected' : '';
   },
   submittedDate: function(){
     return moment(this.submitted).format("MM/DD/YYYY");
@@ -54,22 +54,22 @@ Template.post_edit.helpers({
   }
 });
 
-Template.post_edit.rendered = function(){
-  var post= Posts.findOne(Session.get('selectedPostId'));
-  if(post && !this.editor){
+Template.phrase_edit.rendered = function(){
+  var phrase= Phrases.findOne(Session.get('selectedPhraseId'));
+  if(phrase && !this.editor){
 
     this.editor= new EpicEditor(EpicEditorOptions).load();
-    this.editor.importFile('editor',post.body);
+    this.editor.importFile('editor',phrase.body);
 
     $('#submitted_date').datepicker();
 
   }
 
-  $("#postUser").selectToAutocomplete();
+  $("#phraseUser").selectToAutocomplete();
 
 }
 
-Template.post_edit.events = {
+Template.phrase_edit.events = {
   'click input[type=submit]': function(e, instance){
     e.preventDefault();
     if(!Meteor.user()){
@@ -77,8 +77,8 @@ Template.post_edit.events = {
       return false;
     }
 
-    var selectedPostId=Session.get('selectedPostId');
-    var post = Posts.findOne(selectedPostId);
+    var selectedPhraseId=Session.get('selectedPhraseId');
+    var phrase = Phrases.findOne(selectedPhraseId);
     var specialties = [];
     var url = $('#url').val();
     var shortUrl = $('#short-url').val();
@@ -103,8 +103,8 @@ Template.post_edit.events = {
 
     if(isAdmin(Meteor.user())){
       if(status == STATUS_APPROVED){
-        if(!post.submitted){
-          // this is the first time we are approving the post
+        if(!phrase.submitted){
+          // this is the first time we are approving the phrase
           properties.submitted = new Date().getTime();
         }else if($('#submitted_date').exists()){
           properties.submitted = parseInt(moment($('#submitted_date').val()+$('#submitted_time').val(), "MM/DD/YYYY HH:mm").valueOf());
@@ -112,13 +112,13 @@ Template.post_edit.events = {
       }
       adminProperties = {
         sticky:     !!$('#sticky').attr('checked'),
-        userId:     $('#postUser').val(),
+        userId:     $('#phraseUser').val(),
         status:     status,
       };
       properties = _.extend(properties, adminProperties);
     }
 
-    Posts.update(selectedPostId,
+    Phrases.update(selectedPhraseId,
     {
         $set: properties
       }
@@ -127,8 +127,8 @@ Template.post_edit.events = {
         console.log(error);
         throwError(error.reason);
       }else{
-        trackEvent("edit post", {'postId': selectedPostId});
-        Meteor.Router.to("/posts/"+selectedPostId);
+        trackEvent("edit phrase", {'phraseId': selectedPhraseId});
+        Meteor.Router.to("/phrases/"+selectedPhraseId);
       }
     }
     );
@@ -136,13 +136,13 @@ Template.post_edit.events = {
   'click .delete-link': function(e){
     e.preventDefault();
     if(confirm("Are you sure?")){
-      var selectedPostId=Session.get('selectedPostId');
-      Meteor.call("deletePostById", selectedPostId, function(error) {
+      var selectedPhraseId=Session.get('selectedPhraseId');
+      Meteor.call("deletePhraseById", selectedPhraseId, function(error) {
         if (error) {
           console.log(error);
           throwError(error.reason);
         } else {
-          Meteor.Router.to("/posts/deleted");
+          Meteor.Router.to("/phrases/deleted");
         }
       });
     }

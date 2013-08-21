@@ -2,7 +2,7 @@
 Session.set('initialLoad', true);
 Session.set('currentDate', new Date());
 Session.set('specialtySlug', null);
-Session.set('singlePostReady', false);
+Session.set('singlePhraseReady', false);
 
 // Settings
 Meteor.subscribe('settings', function(){
@@ -23,69 +23,69 @@ if(Meteor.userId() != null){
   Meteor.subscribe('notifications');
 }
 
-// Posts
-// We have a few subscriptions here, for the various ways we load posts
+// Phrases
+// We have a few subscriptions here, for the various ways we load phrases
 //
 // The advantage is that
 //   a) we can change pages a lot quicker
 //     XXX: and we can animate between them (todo)
 //   b) we know when an individual page is ready
 
-// Single Post
+// Single Phrase
 Meteor.autorun(function() {
-  Meteor.subscribe('singlePost', Session.get('selectedPostId'), function(){
-    Session.set('singlePostReady', true);
+  Meteor.subscribe('singlePhrase', Session.get('selectedPhraseId'), function(){
+    Session.set('singlePhraseReady', true);
   });
 });
 
 // Digest
 Meteor.autorun(function() {
-  digestHandle = Meteor.subscribe('postDigest', Session.get('currentDate'));
+  digestHandle = Meteor.subscribe('phraseDigest', Session.get('currentDate'));
 });
 
-// Posts Lists
+// Phrases Lists
 STATUS_PENDING=1;
 STATUS_APPROVED=2;
 STATUS_REJECTED=3;
 
 // put it all together with pagination
-postListSubscription = function(find, options, per_page) {
-  var handle = Meteor.subscribeWithPagination('paginatedPosts', find, options, per_page);
+phraseListSubscription = function(find, options, per_page) {
+  var handle = Meteor.subscribeWithPagination('paginatedPhrases', find, options, per_page);
   handle.fetch = function() {
     var ourFind = _.isFunction(find) ? find() : find;
-    return limitDocuments(Posts.find(ourFind, options), handle.loaded());
+    return limitDocuments(Phrases.find(ourFind, options), handle.loaded());
   }
   return handle;
 }
 
 // note: the "name" property is for internal debugging purposes only
 selectTop = function() {
-  return selectPosts({name: 'top', status: STATUS_APPROVED, slug: Session.get('specialtySlug')});
+  return selectPhrases({name: 'top', status: STATUS_APPROVED, slug: Session.get('specialtySlug')});
 }
-topPostsHandle = postListSubscription(selectTop, sortPosts('score'), 10);
+topPhrasesHandle = phraseListSubscription(selectTop, sortPhrases('score'), 10);
 
 selectNew = function() {
-  return selectPosts({name: 'new', status: STATUS_APPROVED, slug: Session.get('specialtySlug')});
+  return selectPhrases({name: 'new', status: STATUS_APPROVED, slug: Session.get('specialtySlug')});
 }
-newPostsHandle = postListSubscription(selectNew, sortPosts('submitted'), 10);  
+newPhrasesHandle = phraseListSubscription(selectNew, sortPhrases('submitted'), 10);  
 
 selectBest = function() {
-  return selectPosts({name: 'best', status: STATUS_APPROVED, slug: Session.get('specialtySlug')});
+  return selectPhrases({name: 'best', status: STATUS_APPROVED, slug: Session.get('specialtySlug')});
 }
-bestPostsHandle = postListSubscription(selectBest, sortPosts('baseScore'), 10);  
+bestPhrasesHandle = phraseListSubscription(selectBest, sortPhrases('baseScore'), 10);  
 
 selectPending = function() {
-  return selectPosts({name: 'pending', status: STATUS_PENDING, slug: Session.get('specialtySlug')});
+  return selectPhrases({name: 'pending', status: STATUS_PENDING, slug: Session.get('specialtySlug')});
 }
-pendingPostsHandle = postListSubscription(selectPending, sortPosts('createdAt'), 10);
+pendingPhrasesHandle = phraseListSubscription(selectPending, sortPhrases('createdAt'), 10);
 
 // Comments
-// Collection depends on selectedPostId and selectedCommentId session variable
+// Collection depends on selectedPhraseId and selectedCommentId session variable
 
-Session.set('selectedPostId', null);
+Session.set('selectedPhraseId', null);
 
 Meteor.autosubscribe(function() {
-  var query = { $or : [ { post : Session.get('selectedPostId') } , { _id : Session.get('selectedCommentId') } ] };
+  var query = { $or : [ { phrase : Session.get('selectedPhraseId') } , { _id : Session.get('selectedCommentId') } ] };
   Meteor.subscribe('comments', query, function() {
     Session.set('singleCommentReady', true);
   });

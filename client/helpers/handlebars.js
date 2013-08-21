@@ -4,9 +4,9 @@ Handlebars.registerHelper('canView', function(action) {
   var action=(typeof action !== 'string') ? null : action;
   return canView(Meteor.user(), action);
 });
-Handlebars.registerHelper('canPost', function(action) {
+Handlebars.registerHelper('canPhrase', function(action) {
   var action=(typeof action !== 'string') ? null : action;
-  return canPost(Meteor.user(), action);
+  return canPhrase(Meteor.user(), action);
 });
 Handlebars.registerHelper('canComment', function(action) {
   var action=(typeof action !== 'string') ? null : action;
@@ -31,9 +31,9 @@ Handlebars.registerHelper('isAdmin', function(showError) {
 });
 Handlebars.registerHelper('canEdit', function(collectionName, item, action) {
   var action = (typeof action !== 'string') ? null : action;
-  var collection = (typeof collectionName !== 'string') ? Posts : eval(collectionName);
+  var collection = (typeof collectionName !== 'string') ? Phrases : eval(collectionName);
   console.log(item);
-  // var itemId = (collectionName==="Posts") ? Session.get('selectedPostId') : Session.get('selectedCommentId');
+  // var itemId = (collectionName==="Phrases") ? Session.get('selectedPhraseId') : Session.get('selectedCommentId');
   // var item=collection.findOne(itemId);
   return item && canEdit(Meteor.user(), item, action);
 });

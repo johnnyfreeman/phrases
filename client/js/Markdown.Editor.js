@@ -49,13 +49,13 @@
     // - getConverter() returns the markdown converter object that was passed to the constructor
     // - run() actually starts the editor; should be called after all necessary plugins are registered. Calling this more than once is a no-op.
     // - refreshPreview() forces the preview to be updated. This method is only available after run() was called.
-    Markdown.Editor = function (markdownConverter, idPostfix, help) {
+    Markdown.Editor = function (markdownConverter, idPhrasefix, help) {
 
-        idPostfix = idPostfix || "";
+        idPhrasefix = idPhrasefix || "";
 
         var hooks = this.hooks = new Markdown.HookCollection();
         hooks.addNoop("onPreviewRefresh");       // called with no arguments after the preview has been refreshed
-        hooks.addNoop("postBlockquoteCreation"); // called with the user's selection *after* the blockquote was created; should return the actual to-be-inserted text
+        hooks.addNoop("phraseBlockquoteCreation"); // called with the user's selection *after* the blockquote was created; should return the actual to-be-inserted text
         hooks.addFalse("insertImageDialog");     /* called with one parameter: a callback to be called with the URL of the image. If the application creates
                                                   * its own image insertion dialog, this hook should return true, and the callback should be called with the chosen
                                                   * image url (or null if the user cancelled). If this hook returns false, the default dialog will be used.
@@ -70,7 +70,7 @@
             if (panels)
                 return; // already initialized
 
-            panels = new PanelCollection(idPostfix);
+            panels = new PanelCollection(idPhrasefix);
             var commandManager = new CommandManager(hooks);
             var previewManager = new PreviewManager(markdownConverter, panels, function () { hooks.onPreviewRefresh(); });
             var undoManager, uiManager;
@@ -88,7 +88,7 @@
                 }
             }
 
-            uiManager = new UIManager(idPostfix, panels, undoManager, previewManager, commandManager, help);
+            uiManager = new UIManager(idPhrasefix, panels, undoManager, previewManager, commandManager, help);
             uiManager.setUndoRedoButtonStates();
 
             var forceRefresh = that.refreshPreview = function () { previewManager.refresh(true); };
@@ -246,10 +246,10 @@
     // This ONLY affects Internet Explorer (tested on versions 6, 7
     // and 8) and ONLY on button clicks.  Keyboard shortcuts work
     // normally since the focus never leaves the textarea.
-    function PanelCollection(postfix) {
-        this.buttonBar = doc.getElementById("wmd-button-bar" + postfix);
-        this.preview = doc.getElementById("wmd-preview" + postfix);
-        this.input = doc.getElementById("wmd-input" + postfix);
+    function PanelCollection(phrasefix) {
+        this.buttonBar = doc.getElementById("wmd-button-bar" + phrasefix);
+        this.preview = doc.getElementById("wmd-preview" + phrasefix);
+        this.input = doc.getElementById("wmd-input" + phrasefix);
     };
 
     // Returns true if the DOM element is visible, false if it's hidden.
@@ -302,20 +302,20 @@
     };
 
     // Extends a regular expression.  Returns a new RegExp
-    // using pre + regex + post as the expression.
+    // using pre + regex + phrase as the expression.
     // Used in a few functions where we have a base
     // expression and we want to pre- or append some
     // conditions to it (e.g. adding "$" to the end).
     // The flags are unchanged.
     //
-    // regex is a RegExp, pre and post are strings.
-    util.extendRegExp = function (regex, pre, post) {
+    // regex is a RegExp, pre and phrase are strings.
+    util.extendRegExp = function (regex, pre, phrase) {
 
         if (pre === null || pre === undefined) {
             pre = "";
         }
-        if (post === null || post === undefined) {
-            post = "";
+        if (phrase === null || phrase === undefined) {
+            phrase = "";
         }
 
         var pattern = regex.toString();
@@ -329,7 +329,7 @@
 
         // Remove the slash delimiters on the regular expression.
         pattern = pattern.replace(/(^\/|\/$)/g, "");
-        pattern = pre + pattern + post;
+        pattern = pre + pattern + phrase;
 
         return new re(pattern, flags);
     }
@@ -1161,7 +1161,7 @@
         }, 0);
     };
 
-    function UIManager(postfix, panels, undoManager, previewManager, commandManager, helpOptions) {
+    function UIManager(phrasefix, panels, undoManager, previewManager, commandManager, helpOptions) {
 
         var inputBox = panels.input,
             buttons = {}; // buttons.undo, buttons.link, etc. The actual DOM elements.
@@ -1383,7 +1383,7 @@
             var highlightYShift = "-40px";
 
             var buttonRow = document.createElement("ul");
-            buttonRow.id = "wmd-button-row" + postfix;
+            buttonRow.id = "wmd-button-row" + phrasefix;
             buttonRow.className = 'wmd-button-row';
             buttonRow = buttonBar.appendChild(buttonRow);
             var xPosition = 0;
@@ -1393,7 +1393,7 @@
                 button.style.left = xPosition + "px";
                 xPosition += 25;
                 var buttonImage = document.createElement("span");
-                button.id = id + postfix;
+                button.id = id + phrasefix;
                 button.appendChild(buttonImage);
                 button.title = title;
                 button.XShift = XShift;
@@ -1406,7 +1406,7 @@
             var makeSpacer = function (num) {
                 var spacer = document.createElement("li");
                 spacer.className = "wmd-spacer wmd-spacer" + num;
-                spacer.id = "wmd-spacer" + num + postfix;
+                spacer.id = "wmd-spacer" + num + phrasefix;
                 buttonRow.appendChild(spacer);
                 xPosition += 25;
             }
@@ -1414,20 +1414,20 @@
             buttons.bold = makeButton("wmd-bold-button", "Strong <strong> Ctrl+B", "0px", bindCommand("doBold"));
             buttons.italic = makeButton("wmd-italic-button", "Emphasis <em> Ctrl+I", "-20px", bindCommand("doItalic"));
             makeSpacer(1);
-            buttons.link = makeButton("wmd-link-button", "Hyperlink <a> Ctrl+L", "-40px", bindCommand(function (chunk, postProcessing) {
-                return this.doLinkOrImage(chunk, postProcessing, false);
+            buttons.link = makeButton("wmd-link-button", "Hyperlink <a> Ctrl+L", "-40px", bindCommand(function (chunk, phraseProcessing) {
+                return this.doLinkOrImage(chunk, phraseProcessing, false);
             }));
             buttons.quote = makeButton("wmd-quote-button", "Blockquote <blockquote> Ctrl+Q", "-60px", bindCommand("doBlockquote"));
             buttons.code = makeButton("wmd-code-button", "Code Sample <pre><code> Ctrl+K", "-80px", bindCommand("doCode"));
-            buttons.image = makeButton("wmd-image-button", "Image <img> Ctrl+G", "-100px", bindCommand(function (chunk, postProcessing) {
-                return this.doLinkOrImage(chunk, postProcessing, true);
+            buttons.image = makeButton("wmd-image-button", "Image <img> Ctrl+G", "-100px", bindCommand(function (chunk, phraseProcessing) {
+                return this.doLinkOrImage(chunk, phraseProcessing, true);
             }));
             makeSpacer(2);
-            buttons.olist = makeButton("wmd-olist-button", "Numbered List <ol> Ctrl+O", "-120px", bindCommand(function (chunk, postProcessing) {
-                this.doList(chunk, postProcessing, true);
+            buttons.olist = makeButton("wmd-olist-button", "Numbered List <ol> Ctrl+O", "-120px", bindCommand(function (chunk, phraseProcessing) {
+                this.doList(chunk, phraseProcessing, true);
             }));
-            buttons.ulist = makeButton("wmd-ulist-button", "Bulleted List <ul> Ctrl+U", "-140px", bindCommand(function (chunk, postProcessing) {
-                this.doList(chunk, postProcessing, false);
+            buttons.ulist = makeButton("wmd-ulist-button", "Bulleted List <ul> Ctrl+U", "-140px", bindCommand(function (chunk, phraseProcessing) {
+                this.doList(chunk, phraseProcessing, false);
             }));
             buttons.heading = makeButton("wmd-heading-button", "Heading <h1>/<h2> Ctrl+H", "-160px", bindCommand("doHeading"));
             buttons.hr = makeButton("wmd-hr-button", "Horizontal Rule <hr> Ctrl+R", "-180px", bindCommand("doHorizontalRule"));
@@ -1447,7 +1447,7 @@
                 var helpButtonImage = document.createElement("span");
                 helpButton.appendChild(helpButtonImage);
                 helpButton.className = "wmd-button wmd-help-button";
-                helpButton.id = "wmd-help-button" + postfix;
+                helpButton.id = "wmd-help-button" + phrasefix;
                 helpButton.XShift = "-240px";
                 helpButton.isHelp = true;
                 helpButton.style.right = "0px";
@@ -1503,18 +1503,18 @@
         chunk.selection = chunk.selection.replace(/\s+$/, "");
     };
 
-    commandProto.doBold = function (chunk, postProcessing) {
-        return this.doBorI(chunk, postProcessing, 2, "strong text");
+    commandProto.doBold = function (chunk, phraseProcessing) {
+        return this.doBorI(chunk, phraseProcessing, 2, "strong text");
     };
 
-    commandProto.doItalic = function (chunk, postProcessing) {
-        return this.doBorI(chunk, postProcessing, 1, "emphasized text");
+    commandProto.doItalic = function (chunk, phraseProcessing) {
+        return this.doBorI(chunk, phraseProcessing, 1, "emphasized text");
     };
 
     // chunk: The selected region that will be enclosed with */**
     // nStars: 1 for italics, 2 for bold
     // insertText: If you just click the button without highlighting text, this gets inserted
-    commandProto.doBorI = function (chunk, postProcessing, nStars, insertText) {
+    commandProto.doBorI = function (chunk, phraseProcessing, nStars, insertText) {
 
         // Get rid of whitespace and fixup newlines.
         chunk.trimWhitespace();
@@ -1650,7 +1650,7 @@
         });
     }
 
-    commandProto.doLinkOrImage = function (chunk, postProcessing, isImage) {
+    commandProto.doLinkOrImage = function (chunk, phraseProcessing, isImage) {
 
         chunk.trimWhitespace();
         chunk.findTags(/\s*!?\[/, /\][ ]?(?:\n[ ]*)?(\[.*?\])?/);
@@ -1718,7 +1718,7 @@
                         }
                     }
                 }
-                postProcessing();
+                phraseProcessing();
             };
 
             background = ui.createBackground();
@@ -1736,7 +1736,7 @@
 
     // When making a list, hitting shift-enter will put your cursor on the next line
     // at the current indent level.
-    commandProto.doAutoindent = function (chunk, postProcessing) {
+    commandProto.doAutoindent = function (chunk, phraseProcessing) {
 
         var commandMgr = this,
             fakeSelection = false;
@@ -1779,7 +1779,7 @@
         }
     };
 
-    commandProto.doBlockquote = function (chunk, postProcessing) {
+    commandProto.doBlockquote = function (chunk, phraseProcessing) {
 
         chunk.selection = chunk.selection.replace(/^(\n*)([^\r]+?)(\n*)$/,
             function (totalMatch, newlinesBefore, text, newlinesAfter) {
@@ -1912,7 +1912,7 @@
             }
         }
 
-        chunk.selection = this.hooks.postBlockquoteCreation(chunk.selection);
+        chunk.selection = this.hooks.phraseBlockquoteCreation(chunk.selection);
 
         if (!/\n/.test(chunk.selection)) {
             chunk.selection = chunk.selection.replace(/^(> *)/,
@@ -1923,7 +1923,7 @@
         }
     };
 
-    commandProto.doCode = function (chunk, postProcessing) {
+    commandProto.doCode = function (chunk, phraseProcessing) {
 
         var hasTextBefore = /\S[ ]*$/.test(chunk.before);
         var hasTextAfter = /^[ ]*\S/.test(chunk.after);
@@ -1988,7 +1988,7 @@
         }
     };
 
-    commandProto.doList = function (chunk, postProcessing, isNumberedList) {
+    commandProto.doList = function (chunk, phraseProcessing, isNumberedList) {
 
         // These are identical except at the very beginning and end.
         // Should probably use the regex extension function to make this clearer.
@@ -2091,7 +2091,7 @@
 
     };
 
-    commandProto.doHeading = function (chunk, postProcessing) {
+    commandProto.doHeading = function (chunk, phraseProcessing) {
 
         // Remove leading/trailing whitespace and reduce internal spaces to single spaces.
         chunk.selection = chunk.selection.replace(/\s+/g, " ");
@@ -2150,7 +2150,7 @@
         }
     };
 
-    commandProto.doHorizontalRule = function (chunk, postProcessing) {
+    commandProto.doHorizontalRule = function (chunk, phraseProcessing) {
         chunk.startTag = "----------\n";
         chunk.selection = "";
         chunk.skipLines(2, 1, true);

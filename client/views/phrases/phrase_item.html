@@ -1,0 +1,55 @@
+<template name="phrase_item">
+  <div class="phrase phrase-{{rank}} {{#if sticky}}sticky{{/if}} {{inactiveClass}}" id="{{_id}}">
+    <ul class="phrase-actions">
+      <li class="phrase-share desktop"><a href="#" class="share-link"><i class="icon-share"></i><span class="action">Share</span></a>
+        <div class="share-options hidden">
+          {{#constant}}
+          <div data-url="{{#if url}}{{url}}{{else}}{{current_domain}}/phrases/{{_id}}{{/if}}" data-text="{{headline}}" class="share-replace">
+          </div>
+          {{/constant}}
+        </div>
+      </li>
+      <li class="phrase-discuss">
+        <a class="discuss-link go-to-comments" href="/phrases/{{_id}}">
+          <i class="icon-comment"></i>
+          <span class="count">{{comments}}</span>
+          <span class="action">Discuss</span>
+        </a>
+      </li>
+      <li class="phrase-more mobile"><a class="more-link"><i class="icon-share"></i><span class="action">Text </span></a></li>
+    </ul>
+    <div class="phrase-content">
+      {{#if showRank}}<span class="phrase-rank">{{rank}}</span>{{/if}}
+      <div class="phrase-upvote">
+        {{#if voted}}
+          <span class="upvote-link voted"><i class="icon-check"></i><span>Upvote</span></span>
+        {{else}}
+          <a class="upvote-link not-voted" href="#"><i class="icon-up"></i><span>Upvote</span></a>
+        {{/if}}
+      </div>
+      <div class="phrase-info">
+        {{#if sticky}}
+          <span class="phrase-sticky"><i class="icon-pin"></i><span>Sticky</span></span>
+        {{/if}}
+        <h3 class="phrase-heading">
+          <a href="{{phraseLink}}" class="phrase-title" target="_blank">{{headline}}</a>
+          {{#if url}}<span class="phrase-domain">{{domain}}</span>{{/if}}
+            {{#each specialties}}
+              <a href="{{specialtyLink}}" class="phrase-specialty specialty-{{slug}}">{{name}}</a>
+            {{/each}}
+        </h3>
+        <p class="phrase-meta"><span class="points">{{votes}} <span class="unit">{{pointsUnitDisplayText}} </span></span>by  <a class="phrase-author" href="/users/{{userId}}">{{authorName}}</a> <span class="phrase-time">{{ago}}</span><span class="comments">, <a class="go-to-comments" href="/phrases/{{_id}}">{{comments}} {{commentsDisplayText}}</a></span>
+          {{#if can_edit}}
+            | <a href="/phrases/{{_id}}/edit" class="edit-link goto-edit">Edit</a>
+          {{/if}}
+          {{#if currentUser.isAdmin}}
+            | status: {{status}}</span>, votes: {{votes}}, baseScore: {{baseScore}}, score: {{short_score}}, clicks: {{clicks}}
+          {{/if}}
+        </p>
+      </div>
+    </div>
+    {{#if body}}
+      <div class="phrase-message markdown">{{{body_formatted}}}</div>
+    {{/if}}
+  </div>
+</template>

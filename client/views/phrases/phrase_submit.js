@@ -1,4 +1,4 @@
-Template.post_submit.helpers({
+Template.phrase_submit.helpers({
   specialties: function(){
     return Specialties.find();
   },
@@ -9,24 +9,24 @@ Template.post_submit.helpers({
     return getDisplayName(this);
   },
   isSelected: function(){
-    var post=Posts.findOne(Session.get('selectedPostId'));
-    return post && this._id == post.userId;
+    var phrase=Phrases.findOne(Session.get('selectedPhraseId'));
+    return phrase && this._id == phrase.userId;
   }
 });
 
-Template.post_submit.rendered = function(){
-  Session.set('selectedPostId', null);
+Template.phrase_submit.rendered = function(){
+  Session.set('selectedPhraseId', null);
   if(!this.editor && $('#editor').exists())
     this.editor= new EpicEditor(EpicEditorOptions).load();
   $('#submitted').datepicker().on('changeDate', function(ev){
     $('#submitted_hidden').val(moment(ev.date).valueOf());
   });
 
-  $("#postUser").selectToAutocomplete();
+  $("#phraseUser").selectToAutocomplete();
 
 }
 
-Template.post_submit.events = {
+Template.phrase_submit.events = {
   'click input[type=submit]': function(e, instance){
     e.preventDefault();
 
@@ -44,7 +44,7 @@ Template.post_submit.events = {
     var specialties=[];
     var sticky=!!$('#sticky').attr('checked');
     var submitted = $('#submitted_hidden').val();
-    var userId = $('#postUser').val();
+    var userId = $('#phraseUser').val();
     var status = parseInt($('input[name=status]:checked').val());
 
     $('input[name=specialty]:checked').each(function() {
@@ -66,18 +66,18 @@ Template.post_submit.events = {
       properties.url = cleanUrl;
     }
 
-    Meteor.call('post', properties, function(error, post) {
+    Meteor.call('phrase', properties, function(error, phrase) {
       if(error){
         throwError(error.reason);
         clearSeenErrors();
         $(e.target).removeClass('disabled');
         if(error.error == 603)
-          Meteor.Router.to('/posts/'+error.details);
+          Meteor.Router.to('/phrases/'+error.details);
       }else{
-        trackEvent("new post", {'postId': post.postId});
-        if(post.status === STATUS_PENDING)
-          throwError('Thanks, your post is awaiting approval.')
-        Meteor.Router.to('/posts/'+post.postId);
+        trackEvent("new phrase", {'phraseId': phrase.phraseId});
+        if(phrase.status === STATUS_PENDING)
+          throwError('Thanks, your phrase is awaiting approval.')
+        Meteor.Router.to('/phrases/'+phrase.phraseId);
       }
     });
   }

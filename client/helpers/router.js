@@ -21,7 +21,7 @@
   
   // specific router functions
   digest = function(year, month, day, view){
-    var destination = (typeof view === 'undefined') ? 'posts_digest' : 'posts_digest_'+view
+    var destination = (typeof view === 'undefined') ? 'phrases_digest' : 'phrases_digest_'+view
     if (typeof day === 'undefined') {
       // we can get into an infinite reactive loop with the subscription filter
       // if we keep setting the date even when it's barely changed
@@ -43,19 +43,19 @@
     // }
   };
 
-  post = function(id, commentId) {
-    Session.set('selectedPostId', id);
+  phrase = function(id, commentId) {
+    Session.set('selectedPhraseId', id);
     if(typeof commentId !== 'undefined')
       Session.set('scrollToCommentId', commentId); 
   
-    // on post page, we show the comment tree
+    // on phrase page, we show the comment tree
     Session.set('showChildComments',true);
-    return 'post_page';
+    return 'phrase_page';
   };
 
-  post_edit = function(id) {
-    Session.set('selectedPostId', id); 
-    return 'post_edit';
+  phrase_edit = function(id) {
+    Session.set('selectedPhraseId', id); 
+    return 'phrase_edit';
   };
 
   comment = function(id) {
@@ -98,30 +98,30 @@
     console.log('setting specialty slug to: '+specialtySlug)
     Session.set('specialtySlug', specialtySlug);
     Meteor.Router.specialtyFilter = true;
-    return 'posts_'+view;
+    return 'phrases_'+view;
   }
 
   // XXX: not sure if the '/' trailing routes are needed any more
   Meteor.Router.add({
-    '/': 'posts_top',
-    '/top':'posts_top',
-    '/top/:page':'posts_top',
-    '/new':'posts_new',
-    '/new/:page':'posts_new',
-    '/best':'posts_best',
-    '/pending':'posts_pending',
+    '/': 'phrases_top',
+    '/top':'phrases_top',
+    '/top/:page':'phrases_top',
+    '/new':'phrases_new',
+    '/new/:page':'phrases_new',
+    '/best':'phrases_best',
+    '/pending':'phrases_pending',
     '/digest/:year/:month/:day': digest,
     '/digest': digest,
     '/c/:specialty_slug/:view': specialty,
     '/c/:specialty_slug': specialty,
     '/signin':'user_signin',
     '/signup':'user_signup',
-    '/submit':'post_submit',
+    '/submit':'phrase_submit',
     '/invite':'no_invite',
-    '/posts/deleted':'post_deleted',
-    '/posts/:id/edit': post_edit,
-    '/posts/:id/comment/:comment_id': post,
-    '/posts/:id': post,
+    '/phrases/deleted':'phrase_deleted',
+    '/phrases/:id/edit': phrase_edit,
+    '/phrases/:id/comment/:comment_id': phrase,
+    '/phrases/:id': phrase,
     '/comments/deleted':'comment_deleted',   
     '/comments/:id': comment,
     '/comments/:id/reply': comment_reply,
@@ -173,8 +173,8 @@
       return error;
     },
   
-    canPost: function(page) {
-      var error = canPost(Meteor.user(), true);
+    canPhrase: function(page) {
+      var error = canPhrase(Meteor.user(), true);
       if (error === true)
         return page;
       
@@ -188,15 +188,15 @@
     
     canEdit: function(page) {
       // make findOne() non reactive to avoid re-triggering the router every time the 
-      // current comment or post object changes
-      // but make sure the comment/post is loaded before moving on
+      // current comment or phrase object changes
+      // but make sure the comment/phrase is loaded before moving on
       if (page === 'comment_edit') {
         var item = Comments.findOne(Session.get('selectedCommentId'), {reactive: false});
         if(!Session.get('singleCommentReady'))
           return 'loading'
       } else {
-        var item = Posts.findOne(Session.get('selectedPostId'), {reactive: false});
-        if(!Session.get('singlePostReady'))
+        var item = Phrases.findOne(Session.get('selectedPhraseId'), {reactive: false});
+        if(!Session.get('singlePhraseReady'))
           return 'loading'
       }
 
@@ -235,13 +235,13 @@
       }
     },
   
-    // if we are on a page that requires a post, as set in selectedPostId
-    requirePost: function(page) {
+    // if we are on a page that requires a phrase, as set in selectedPhraseId
+    requirePhrase: function(page) {
       // make findOne() non reactive to avoid re-triggering the router every time the 
-      // current comment or post object changes
-      if (Posts.findOne(Session.get('selectedPostId'), {reactive: false})) {
+      // current comment or phrase object changes
+      if (Phrases.findOne(Session.get('selectedPhraseId'), {reactive: false})) {
         return page;
-      } else if (! Session.get('singlePostReady')) {
+      } else if (! Session.get('singlePhraseReady')) {
         return 'loading';
       } else {
         return 'not_found';
@@ -250,14 +250,14 @@
   });
   //
   Meteor.Router.filter('requireProfile');
-  Meteor.Router.filter('requireLogin', {only: ['comment_reply','post_submit']});
-  Meteor.Router.filter('canView', {only: ['posts_top', 'posts_new', 'posts_digest', 'posts_best']});
+  Meteor.Router.filter('requireLogin', {only: ['comment_reply','phrase_submit']});
+  Meteor.Router.filter('canView', {only: ['phrases_top', 'phrases_new', 'phrases_digest', 'phrases_best']});
   Meteor.Router.filter('isLoggedOut', {only: ['user_signin', 'user_signup']});
-  Meteor.Router.filter('canPost', {only: ['posts_pending', 'comment_reply', 'post_submit']});
-  Meteor.Router.filter('canEdit', {only: ['post_edit', 'comment_edit']});
-  Meteor.Router.filter('requirePost', {only: ['post_page', 'post_edit']});
-  Meteor.Router.filter('isAdmin', {only: ['posts_pending', 'users', 'settings', 'specialties', 'admin']});
-  Meteor.Router.filter('setRequestTimestamp', {only: ['post_page']});
+  Meteor.Router.filter('canPhrase', {only: ['phrases_pending', 'comment_reply', 'phrase_submit']});
+  Meteor.Router.filter('canEdit', {only: ['phrase_edit', 'comment_edit']});
+  Meteor.Router.filter('requirePhrase', {only: ['phrase_page', 'phrase_edit']});
+  Meteor.Router.filter('isAdmin', {only: ['phrases_pending', 'users', 'settings', 'specialties', 'admin']});
+  Meteor.Router.filter('setRequestTimestamp', {only: ['phrase_page']});
 
   Meteor.startup(function() {
     Meteor.autorun(function() {
@@ -266,11 +266,11 @@
       if(Meteor.Router.page() !== "loading"){
         console.log('------ '+Meteor.Router.page()+' ------');
       
-        // note: posts_digest doesn't use paginated subscriptions so it cannot have a rank
-        if(_.contains(['posts_top', 'posts_new', 'posts_pending', 'posts_best'], Meteor.Router.page())){
-          Session.set('isPostsList', true);
+        // note: phrases_digest doesn't use paginated subscriptions so it cannot have a rank
+        if(_.contains(['phrases_top', 'phrases_new', 'phrases_pending', 'phrases_best'], Meteor.Router.page())){
+          Session.set('isPhrasesList', true);
         }else{
-          Session.set('isPostsList', false);
+          Session.set('isPhrasesList', false);
         }
 
       }

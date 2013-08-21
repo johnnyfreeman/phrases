@@ -1,20 +1,20 @@
-<template name="post_edit">
+<template name="phrase_edit">
   <div class="grid submit">
-    {{#constant}}{{#with post}}
+    {{#constant}}{{#with phrase}}
       <form class="grid-block form-horizontal">
         <div class="control-group">
-          <label class="control-label post-form-headline">Created</label>
+          <label class="control-label phrase-form-headline">Created</label>
           <div class="controls"><p>{{created}}</p></div>
         </div>
         <div class="control-group">
-          <label class="control-label post-form-headline">Title</label>
+          <label class="control-label phrase-form-headline">Title</label>
           <div class="controls"><input id="title" type="text" value="{{headline}}" /></div>
         </div>
         <div class="control-group">
-          <label class="control-label post-form-body">Body</label>
+          <label class="control-label phrase-form-body">Body</label>
           <div class="controls" id="editor"><textarea id="body" value="" class="input-xlarge">{{body}}</textarea></div>
         </div>
-        <div class="control-group post-form-specialty">
+        <div class="control-group phrase-form-specialty">
           <label class="control-label">Specialty</label>
           <div class="controls">
             {{#each specialties}}
@@ -25,13 +25,13 @@
           </div>
         </div>
         {{#if isAdmin}}
-          <div class="control-group post-form-sticky">
+          <div class="control-group phrase-form-sticky">
             <label class="control-label">Inactive?</label>
             <div class="controls">
               {{inactive}}
             </div>
           </div>
-          <div class="control-group post-form-sticky">
+          <div class="control-group phrase-form-sticky">
             <label class="control-label">Sticky?</label>
             <div class="controls">
               <input type="checkbox" name="sticky" id="sticky" {{isSticky}} />
@@ -39,33 +39,33 @@
           </div>
           {{#if isApproved}}
           <div class="control-group">
-            <label class="control-label post-form-date">Submission Date</label>
+            <label class="control-label phrase-form-date">Submission Date</label>
             <div class="controls"><input id="submitted_date" type="text" value="{{submittedDate}}" /></div>
             <input id="submitted_hidden" type="hidden" value="{{submitted}}" />
           </div>
           <div class="control-group">
-            <label class="control-label post-form-time">Submission Time</label>
+            <label class="control-label phrase-form-time">Submission Time</label>
             <div class="controls"><input id="submitted_time" type="text" value="{{submittedTime}}" /></div>
           </div>
           {{else}}
           <div class="control-group">
-            <label class="control-label post-form-timestamp">Submission</label>
+            <label class="control-label phrase-form-timestamp">Submission</label>
             <div class="controls">
-              <p>Note: this post is still pending so it has no submission timestamp yet.</p>
+              <p>Note: this phrase is still pending so it has no submission timestamp yet.</p>
             </div>  
           </div>
           {{/if}}
-          <div class="control-group post-form-user">
+          <div class="control-group phrase-form-user">
             <label class="control-label">User</label>
             <div class="controls">
-              <select id="postUser">
+              <select id="phraseUser">
                 {{#each users}}
                   <option {{isSelected}} value="{{_id}}">{{userName}}</option>
                 {{/each}}
               </select>
             </div>
           </div>
-          <div class="control-group post-form-status">
+          <div class="control-group phrase-form-status">
             <label class="control-label">Status</label>
             <div class="controls">
               <label class="radio inline">
@@ -81,7 +81,7 @@
           </div>
         {{/if}}
         <div class="form-actions">
-          <a class="delete-link" href="/posts/deleted">Delete Post</a>
+          <a class="delete-link" href="/phrases/deleted">Delete Phrase</a>
           <input type="submit" value="Submit" />
         </div>
       </form>

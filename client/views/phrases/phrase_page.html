@@ -1,8 +1,8 @@
-<template name="post_page">
+<template name="phrase_page">
 	{{#if canView}}
-  <div class="single-post grid">
-    {{#with post}}
-     {{> post_item}}
+  <div class="single-phrase grid">
+    {{#with phrase}}
+     {{> phrase_item}}
     {{/with}}
     {{#if canComment}}
       {{> comment_form}}

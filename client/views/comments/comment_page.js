@@ -1,6 +1,6 @@
-Template.comment_page.post = function(){
+Template.comment_page.phrase = function(){
   var selectedComment = Comments.findOne(Session.get('selectedCommentId'));
-  return selectedComment && Posts.findOne(selectedComment.post);
+  return selectedComment && Phrases.findOne(selectedComment.phrase);
 };
 
 Template.comment_page.helpers({

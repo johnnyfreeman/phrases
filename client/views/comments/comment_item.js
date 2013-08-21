@@ -73,8 +73,8 @@
       return submitted.toString();
     }
     ,child_comments: function(){
-      var post_id = Session.get('selectedPostId');
-      var comments = Comments.find({ post: post_id, parent: this._id });
+      var phrase_id = Session.get('selectedPhraseId');
+      var comments = Comments.find({ phrase: phrase_id, parent: this._id });
       return comments;
     }
     ,author: function(){
@@ -177,7 +177,7 @@ Template.comment_item.rendered=function(){
         throwError("Please log in first");
       }
       Meteor.call('upvoteComment', this._id, function(error, result){
-        trackEvent("post upvoted", {'commentId':instance.data._id, 'postId': instance.data.post, 'authorId':instance.data.userId});
+        trackEvent("phrase upvoted", {'commentId':instance.data._id, 'phraseId': instance.data.phrase, 'authorId':instance.data.userId});
       });
     },
     'click .upvoted .upvote': function(e, instance){
@@ -187,7 +187,7 @@ Template.comment_item.rendered=function(){
         throwError("Please log in first");
       }
       Meteor.call('cancelUpvoteComment', this._id, function(error, result){
-        trackEvent("post upvote cancelled", {'commentId':instance.data._id, 'postId': instance.data.post, 'authorId':instance.data.userId});
+        trackEvent("phrase upvote cancelled", {'commentId':instance.data._id, 'phraseId': instance.data.phrase, 'authorId':instance.data.userId});
       });
     },
     'click .not-downvoted .downvote': function(e, instance){
@@ -197,7 +197,7 @@ Template.comment_item.rendered=function(){
         throwError("Please log in first");
       }
       Meteor.call('downvoteComment', this._id, function(error, result){
-        trackEvent("post downvoted", {'commentId':instance.data._id, 'postId': instance.data.post, 'authorId':instance.data.userId});
+        trackEvent("phrase downvoted", {'commentId':instance.data._id, 'phraseId': instance.data.phrase, 'authorId':instance.data.userId});
       });
     },
     'click .downvoted .downvote': function(e, instance){
@@ -207,7 +207,7 @@ Template.comment_item.rendered=function(){
         throwError("Please log in first");
       }
       Meteor.call('cancelDownvoteComment', this._id, function(error, result){
-        trackEvent("post downvote cancelled", {'commentId':instance.data._id, 'postId': instance.data.post, 'authorId':instance.data.userId});
+        trackEvent("phrase downvote cancelled", {'commentId':instance.data._id, 'phraseId': instance.data.phrase, 'authorId':instance.data.userId});
       });
     }
   };

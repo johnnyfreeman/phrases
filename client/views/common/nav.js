@@ -43,11 +43,11 @@ Template.nav.helpers({
   intercom: function(){
     return !!getSetting('intercomId');
   },
-  canPost: function(){
-    return canPost(Meteor.user());
+  canPhrase: function(){
+    return canPhrase(Meteor.user());
   },
-  requirePostsApproval: function(){
-    return getSetting('requirePostsApproval');
+  requirePhrasesApproval: function(){
+    return getSetting('requirePhrasesApproval');
   },
   hasSpecialties: function(){
     return Specialties.find().count();

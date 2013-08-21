@@ -78,10 +78,10 @@
 		padding-right:10px;
 		min-width:200px;
 	}
-	.posts{
+	.phrases{
 		margin:0 10px;
 		padding:0;
-		.post-rank{
+		.phrase-rank{
 			display:none;
 		}
 	}
@@ -158,33 +158,33 @@
 			}
 		}
 	}
-	.post{
-		.post-content{
+	.phrase{
+		.phrase-content{
 			margin-right:50px;
 			margin-right:0px;
 			// min-height:90px;
 			.upvote-link{
 				width:30px;
 			}
-			.post-info{
+			.phrase-info{
 				margin-left:30px;
 				padding:6px 4px 6px 8px;
 			}
-			.post-heading{
-				.post-title{
+			.phrase-heading{
+				.phrase-title{
 					line-height:1.2;
 					display:block;
 					margin-bottom:4px;
 					font-size:18px;
 				}
-				.post-domain{
+				.phrase-domain{
 					line-height:1;
 					display:block;
 					margin-bottom:4px;
 					font-size:13px;
 				}	
 			}
-			.post-meta{
+			.phrase-meta{
 				font-size:11px;
 				.comments{
 					// display:none;
@@ -198,7 +198,7 @@
 				}
 			}
 		}
-		.post-actions{
+		.phrase-actions{
 			display:none;
 			li{
 				float:none;

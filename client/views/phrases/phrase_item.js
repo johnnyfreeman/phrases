@@ -1,17 +1,17 @@
-Template.post_item.preserve({
-  '.post': function (node) {return node.id; }
+Template.phrase_item.preserve({
+  '.phrase': function (node) {return node.id; }
 });
 
 
-Template.post_item.helpers({
-  postLink: function(){
-    return !!this.url ? this.url : "/posts/"+this._id;
+Template.phrase_item.helpers({
+  phraseLink: function(){
+    return !!this.url ? this.url : "/phrases/"+this._id;
   },
   rank: function() {
     return this._rank + 1;
   },
   showRank: function(){
-    return Session.get('isPostsList');
+    return Session.get('isPhrasesList');
   },
   domain: function(){
     var a = document.createElement('a');
@@ -36,7 +36,7 @@ Template.post_item.helpers({
     return html_body.autoLink();
   },
   ago: function(){
-    // if post is approved show submission time, else show creation time. 
+    // if phrase is approved show submission time, else show creation time. 
     time = this.status == STATUS_APPROVED ? this.submitted : this.createdAt;
     return moment(time).fromNow();
   },
@@ -67,15 +67,15 @@ Template.post_item.helpers({
   }
 });
 
-Template.post_item.rendered = function(){
-  // animate post from previous position to new position
+Template.phrase_item.rendered = function(){
+  // animate phrase from previous position to new position
   var instance = this;
   var rank = instance.data._rank;
   var $this = $(this.firstNode);
   var previousPosition = 0;
   var newPosition = 0;
   for(var i=1; i<=rank; i++){
-    newPosition += $('.post-'+i).height();
+    newPosition += $('.phrase-'+i).height();
   }
 
  // if element has a currentPosition (i.e. it's not the first ever render)
@@ -92,21 +92,21 @@ Template.post_item.rendered = function(){
   }); 
 };
 
-Template.post_item.events = {
+Template.phrase_item.events = {
   'click .upvote-link': function(e, instance){
-    var post = this;
+    var phrase = this;
     e.preventDefault();
       if(!Meteor.user()){
         Meteor.Router.to('/signin');
         throwError("Please log in first");
       }
-      Meteor.call('upvotePost', post._id, function(error, result){
-        trackEvent("post upvoted", {'_id': post._id});
+      Meteor.call('upvotePhrase', phrase._id, function(error, result){
+        trackEvent("phrase upvoted", {'_id': phrase._id});
       });
   },
   'click .share-link': function(e){
-      var $this = $(e.target).parents('.post-share').find('.share-link');
-      var $share = $this.parents('.post-share').find('.share-options');
+      var $this = $(e.target).parents('.phrase-share').find('.share-link');
+      var $share = $this.parents('.phrase-share').find('.share-options');
       e.preventDefault();
       $('.share-link').not($this).removeClass("active");
       $(".share-options").not($share).addClass("hidden");
@@ -114,8 +114,8 @@ Template.post_item.events = {
       $share.toggleClass("hidden");
       $share.find('.share-replace').sharrre(SharrreOptions);
   },
-  'click .post-title': function(e){
-    Meteor.call('clickedPost', this, function(error, result){
+  'click .phrase-title': function(e){
+    Meteor.call('clickedPhrase', this, function(error, result){
       if(error)
         console.log(error);
     });

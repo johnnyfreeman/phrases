@@ -24,22 +24,22 @@ Meteor.publish('allUsers', function() {
   }
 });
 
-// Posts
+// Phrases
 
-// a single post, identified by id
-Meteor.publish('singlePost', function(id) {
-  return Posts.find(id);
+// a single phrase, identified by id
+Meteor.publish('singlePhrase', function(id) {
+  return Phrases.find(id);
 });
 
-Meteor.publish('paginatedPosts', function(find, options, limit) {
+Meteor.publish('paginatedPhrases', function(find, options, limit) {
   options = options || {};
   options.limit = limit;
-  return Posts.find(find || {}, options);
+  return Phrases.find(find || {}, options);
 });
 
-Meteor.publish('postDigest', function(date) {
+Meteor.publish('phraseDigest', function(date) {
   var mDate = moment(date);
-  return findDigestPosts(mDate);
+  return findDigestPhrases(mDate);
 });
 
 // Other Publications

@@ -29,8 +29,8 @@ Meteor.methods({
   changeEmail: function(newEmail) {
     Meteor.users.update(Meteor.userId(), {$set: {emails: [{address: newEmail}]}});
   },
-  numberOfPostsToday: function(){
-    console.log(numberOfItemsInPast24Hours(Meteor.user(), Posts));
+  numberOfPhrasesToday: function(){
+    console.log(numberOfItemsInPast24Hours(Meteor.user(), Phrases));
   },
   numberOfCommentsToday: function(){
     console.log(numberOfItemsInPast24Hours(Meteor.user(), Comments));
@@ -42,7 +42,7 @@ Meteor.methods({
     // TODO
   },
   getScoreDiff: function(id){
-    var object = Posts.findOne(id);
+    var object = Phrases.findOne(id);
     var baseScore = object.baseScore;
     var ageInHours = (new Date().getTime() - object.submitted) / (60 * 60 * 1000);
     var newScore = baseScore / Math.pow(ageInHours + 2, 1.3);

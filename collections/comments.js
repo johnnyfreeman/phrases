@@ -7,7 +7,7 @@ Comments.allow({
 });
 
 Comments.deny({
-  update: function(userId, post, fieldNames) {
+  update: function(userId, phrase, fieldNames) {
     if(isAdminById(userId))
       return false;
     // may only edit the following fields:
@@ -16,10 +16,10 @@ Comments.deny({
 });
 
 Meteor.methods({
-  comment: function(postId, parentCommentId, text){
+  comment: function(phraseId, parentCommentId, text){
     var user = Meteor.user(),
-        post=Posts.findOne(postId),
-        postUser=Meteor.users.findOne(post.userId),
+        phrase=Phrases.findOne(phraseId),
+        phraseUser=Meteor.users.findOne(phrase.userId),
         timeSinceLastComment=timeSinceLast(user, Comments),
         cleanText= cleanUp(text),
         commentInterval = Math.abs(parseInt(getSetting('commentInterval',15))),
@@ -27,13 +27,13 @@ Meteor.methods({
           'commentAuthorId': user._id,
           'commentAuthorName': getDisplayName(user),
           'commentExcerpt': trimWords(stripMarkdown(cleanText),20),
-          'postId': postId,
-          'postHeadline' : post.headline
+          'phraseId': phraseId,
+          'phraseHeadline' : phrase.headline
         };
 
     // check that user can comment
     if (!user || !canComment(user))
-      throw new Meteor.Error('You need to login or be invited to post new comments.');
+      throw new Meteor.Error('You need to login or be invited to phrase new comments.');
     
     // check that user waits more than 15 seconds between comments
     if(!this.isSimulation && (timeSinceLastComment < commentInterval))
@@ -44,7 +44,7 @@ Meteor.methods({
       throw new Meteor.Error(704,'Your comment is empty.');
           
     var comment = {
-        post: postId,
+        phrase: phraseId,
         body: cleanText,
         userId: user._id,
         submitted: new Date().getTime(),
@@ -56,7 +56,7 @@ Meteor.methods({
 
     var newCommentId=Comments.insert(comment);
 
-    Posts.update(postId, {$inc: {comments: 1}});
+    Phrases.update(phraseId, {$inc: {comments: 1}});
 
     Meteor.call('upvoteComment', newCommentId);
 
@@ -76,23 +76,23 @@ Meteor.methods({
         if(parentUser._id != user._id)
           Meteor.call('createNotification','newReply', properties, parentUser, user);
 
-        // if the original poster is different from the author of the parent comment, notify them too
-        if(postUser._id != user._id && parentComment.userId != post.userId)
-          Meteor.call('createNotification','newComment', properties, postUser, user);
+        // if the original phraseer is different from the author of the parent comment, notify them too
+        if(phraseUser._id != user._id && parentComment.userId != phrase.userId)
+          Meteor.call('createNotification','newComment', properties, phraseUser, user);
 
       }else{
         // root comment
         // don't notify users of their own comments
-        if(postUser._id != user._id)
-          Meteor.call('createNotification','newComment', properties, postUser, Meteor.user());
+        if(phraseUser._id != user._id)
+          Meteor.call('createNotification','newComment', properties, phraseUser, Meteor.user());
       }
     }
     return properties;
   },
   removeComment: function(commentId){
     var comment=Comments.findOne(commentId);
-    // decrement post comment count
-    Posts.update(comment.post, {$inc: {comments: -1}});
+    // decrement phrase comment count
+    Phrases.update(comment.phrase, {$inc: {comments: -1}});
     // note: should we also decrease user's comment karma ?
     Comments.remove(commentId);
   }

@@ -1,9 +1,9 @@
-Template.posts_digest.helpers({
-  hasPosts: function(){
+Template.phrases_digest.helpers({
+  hasPhrases: function(){
     return digestHandle && digestHandle.ready();
   },
-  posts: function() {
-    return findDigestPosts(moment(Session.get('currentDate')));
+  phrases: function() {
+    return findDigestPhrases(moment(Session.get('currentDate')));
   },
   currentDate: function(){
     var currentDate=moment(Session.get('currentDate'));
@@ -36,7 +36,7 @@ Template.posts_digest.helpers({
   }
 });
 
-Template.posts_digest.created = function(){
+Template.phrases_digest.created = function(){
   $(document).unbind('keyup'); //remove any potential existing bindings to avoid duplicates
   var currentDate=moment(Session.get('currentDate')).startOf('day');
   var today=moment(new Date()).startOf('daysy');
@@ -49,9 +49,9 @@ Template.posts_digest.created = function(){
   });  
 };
 
-Template.posts_digest.rendered = function(){
+Template.phrases_digest.rendered = function(){
   var distanceFromTop = 0;
-  $('.post').each(function(){
+  $('.phrase').each(function(){
     distanceFromTop += $(this).height();
   });
   distanceFromTop+=55;

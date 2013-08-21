@@ -1,4 +1,4 @@
-<template name="post_submit">
+<template name="phrase_submit">
   <div class="grid submit">
     <form class="grid-block form-horizontal">
       {{#constant}}
@@ -36,7 +36,7 @@
         <div class="control-group">
           <label class="control-label">User</label>
           <div class="controls">
-            <select id="postUser">
+            <select id="phraseUser">
               {{#each users}}
               <option {{#if isSelected}}selected{{/if}} value="{{_id}}">{{userName}}</option>
               {{/each}}

@@ -14,17 +14,17 @@ Template.user_item.helpers({
 	email: function(){
 		return getEmail(this);
 	},
-	posts: function(){
-		return Posts.find({'userId':this._id});
+	phrases: function(){
+		return Phrases.find({'userId':this._id});
 	},
-	postsCount: function(){
-		return Posts.find({'userId':this._id}).count();
+	phrasesCount: function(){
+		return Phrases.find({'userId':this._id}).count();
 	},
 	comments: function(){
 		return Comments.find({'userId':this._id});
 	},
 	commentsCount: function(){
-		// Posts.find({'user_id':this._id}).forEach(function(post){console.log(post.headline);});
+		// Phrases.find({'user_id':this._id}).forEach(function(phrase){console.log(phrase.headline);});
 		return Comments.find({'userId':this._id}).count();
 	},
 	userIsAdmin: function(){
