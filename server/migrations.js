@@ -29,80 +29,80 @@ Meteor.startup(function () {
 
 
 
- // migration updateCategories: make sure categories have slugs
-  if (!Migrations.findOne({name: "updateCategories"})) {
+ // migration updateSpecialties: make sure specialties have slugs
+  if (!Migrations.findOne({name: "updateSpecialties"})) {
     console.log("//----------------------------------------------------------------------//")
-    console.log("//------------//    Starting updateCategories Migration    //-----------//")
+    console.log("//------------//    Starting updateSpecialties Migration    //-----------//")
     console.log("//----------------------------------------------------------------------//")
-    Categories.find().forEach(function (category) {
-      if(typeof category.slug === "undefined"){
-        var slug = slugify(category.name);
-        Categories.update(category._id, {$set: {slug: slug}});
+    Specialties.find().forEach(function (Specialty) {
+      if(typeof Specialty.slug === "undefined"){
+        var slug = slugify(Specialty.name);
+        Specialties.update(Specialty._id, {$set: {slug: slug}});
 
         // START CONSOLE LOGS
         console.log("---------------------")
-        console.log("Category: "+category.name);
-        console.log("Updating category with new slug: "+slug);
+        console.log("Specialty: "+Specialty.name);
+        console.log("Updating Specialty with new slug: "+slug);
         // END CONSOLE LOGS
       }
     });
-    Migrations.insert({name: "updateCategories"});
+    Migrations.insert({name: "updateSpecialties"});
     console.log("//----------------------------------------------------------------------//")
-    console.log("//------------//     Ending updateCategories Migration     //-----------//")
+    console.log("//------------//     Ending updateSpecialties Migration     //-----------//")
     console.log("//----------------------------------------------------------------------//")
   }
 
 
 
 
-  // migration updateCategories: store full category object in post instead of just the name
-  if (!Migrations.findOne({name: "updatePostCategories"})) {
+  // migration updateSpecialties: store full Specialty object in post instead of just the name
+  if (!Migrations.findOne({name: "updatePostSpecialties"})) {
     console.log("//----------------------------------------------------------------------//")
-    console.log("//------------//  Starting updatePostCategories Migration  //-----------//")
+    console.log("//------------//  Starting updatePostSpecialties Migration  //-----------//")
     console.log("//----------------------------------------------------------------------//")
     Posts.find().forEach(function (post) {
-      var oldCategories = post.categories;
-      var newCategories = [];
-      var category = {};
+      var oldSpecialties = post.specialties;
+      var newSpecialties = [];
+      var Specialty = {};
       var updating = false; // by default, assume we're not going to do anything
 
-      // iterate over the post.categories array
-      // if the post has no categories then nothing will happen
-      _.each(oldCategories, function(value, key, list){
-        // make sure the categories are strings
-        if((typeof value === "string") && (category = Categories.findOne({name: value}))){
-          // if value is a string, then look for the matching category object
-          // and if it exists push it to the newCategories array
-          updating = true; // we're updating at least one category for this post
-          newCategories.push(category);
+      // iterate over the post.specialties array
+      // if the post has no specialties then nothing will happen
+      _.each(oldSpecialties, function(value, key, list){
+        // make sure the specialties are strings
+        if((typeof value === "string") && (Specialty = Specialties.findOne({name: value}))){
+          // if value is a string, then look for the matching Specialty object
+          // and if it exists push it to the newSpecialties array
+          updating = true; // we're updating at least one Specialty for this post
+          newSpecialties.push(Specialty);
         }else{
-          // if category A) is already an object, or B) it's a string but a matching category object doesn't exist
+          // if Specialty A) is already an object, or B) it's a string but a matching Specialty object doesn't exist
           // just keep the current value
-          newCategories.push(value);
+          newSpecialties.push(value);
         }
       });
 
       if(updating){
-        // update categories property on post
-        Posts.update(post._id, {$set: {categories: newCategories}});
+        // update specialties property on post
+        Posts.update(post._id, {$set: {specialties: newSpecialties}});
       }
 
       // START CONSOLE LOGS
       console.log("---------------------")
       console.log("Post: "+post.headline);
       if(updating){
-        console.log(oldCategories.length+" categories: "+oldCategories)
-        console.log("Updating categories array to: ");
-        console.log(newCategories);
+        console.log(oldSpecialties.length+" specialties: "+oldSpecialties)
+        console.log("Updating specialties array to: ");
+        console.log(newSpecialties);
       }else{
         console.log("No updates");
       }
       // END CONSOLE LOGS
 
     });
-    Migrations.insert({name: "updatePostCategories"});
+    Migrations.insert({name: "updatePostSpecialties"});
     console.log("//----------------------------------------------------------------------//")
-    console.log("//------------//     Ending updateCategories Migration     //-----------//")
+    console.log("//------------//     Ending updateSpecialties Migration     //-----------//")
     console.log("//----------------------------------------------------------------------//")
   }
 

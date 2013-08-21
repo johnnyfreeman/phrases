@@ -1,6 +1,6 @@
 Template.post_submit.helpers({
-  categories: function(){
-    return Categories.find();
+  specialties: function(){
+    return Specialties.find();
   },
   users: function(){
     return Meteor.users.find();
@@ -41,21 +41,21 @@ Template.post_submit.events = {
     var url = $('#url').val();
     var shortUrl = $('#short-url').val();
     var body = instance.editor.exportFile();
-    var categories=[];
+    var specialties=[];
     var sticky=!!$('#sticky').attr('checked');
     var submitted = $('#submitted_hidden').val();
     var userId = $('#postUser').val();
     var status = parseInt($('input[name=status]:checked').val());
 
-    $('input[name=category]:checked').each(function() {
-      categories.push(Categories.findOne($(this).val()));
+    $('input[name=specialty]:checked').each(function() {
+      specialties.push(Specialties.findOne($(this).val()));
      });
 
     var properties = {
         headline: title
       , body: body
       , shortUrl: shortUrl
-      , categories: categories
+      , specialties: specialties
       , sticky: sticky
       , submitted: submitted
       , userId: userId

@@ -15,7 +15,7 @@ Posts.deny({
     if(isAdminById(userId))
       return false;
     // may only edit the following fields:
-    return (_.without(fieldNames, 'headline', 'url', 'body', 'shortUrl', 'shortTitle', 'categories').length > 0);
+    return (_.without(fieldNames, 'headline', 'url', 'body', 'shortUrl', 'shortTitle', 'specialties').length > 0);
   }
 });
 

@@ -1,27 +1,27 @@
-Template.categories.helpers({
-  categories: function(){
-    return Categories.find();
+Template.specialties.helpers({
+  specialties: function(){
+    return Specialties.find();
   }
 });
 
-Template.categories.events({
+Template.specialties.events({
   'click input[type=submit]': function(e){
     e.preventDefault();
 
     var name = $('#name').val();
     var slug = slugify(name);
     
-    Meteor.call('category', {
+    Meteor.call('specialty', {
       name: name,
       slug: slug
-    }, function(error, categoryName) {
+    }, function(error, specialtyName) {
       if(error){
         console.log(error);
         throwError(error.reason);
         clearSeenErrors();
       }else{
         $('#name').val('');
-        // throwError('New category "'+categoryName+'" created');
+        // throwError('New specialty "'+specialtyName+'" created');
       }
     });
   }

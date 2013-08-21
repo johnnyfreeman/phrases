@@ -49,10 +49,10 @@ Template.nav.helpers({
   requirePostsApproval: function(){
     return getSetting('requirePostsApproval');
   },
-  hasCategories: function(){
-    return Categories.find().count();
+  hasSpecialties: function(){
+    return Specialties.find().count();
   },
-  categories: function(){
-    return Categories.find();
+  specialties: function(){
+    return Specialties.find();
   }
 });

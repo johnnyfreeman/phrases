@@ -8,7 +8,7 @@
 
 ## v0.6
 
-* Added categories
+* Added specialties
 * Cleaned up file structure
 
 ## v0.5.6

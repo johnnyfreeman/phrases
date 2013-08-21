@@ -1,16 +1,16 @@
-Categories = new Meteor.Collection('categories');
+Specialties = new Meteor.Collection('specialties');
 
-Categories.allow({
+Specialties.allow({
   insert: isAdminById
 , update: isAdminById
 , remove: isAdminById
 });
 
 Meteor.methods({
-  category: function(category){
+  specialty: function(specialty){
     if (!Meteor.user() || !isAdmin(Meteor.user()))
-      throw new Meteor.Error('You need to login and be an admin to add a new category.') 
-    var categoryId=Categories.insert(category);
-    return category.name;
+      throw new Meteor.Error('You need to login and be an admin to add a new specialty.') 
+    var specialtyId=Specialties.insert(specialty);
+    return specialty.name;
   }
 });

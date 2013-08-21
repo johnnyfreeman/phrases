@@ -961,7 +961,7 @@ body.pageslide-open {
       font-size: 14px;
       font-weight: normal; }
     /* line 129, ../sass/modules/_posts.scss */
-    .post-content .post-heading .post-category {
+    .post-content .post-heading .post-Specialty {
       display: inline-block;
       font-size: 11px;
       -webkit-border-radius: 3px;
@@ -975,7 +975,7 @@ body.pageslide-open {
       font-weight: normal;
       vertical-align: middle; }
       /* line 138, ../sass/modules/_posts.scss */
-      .post-content .post-heading .post-category:hover {
+      .post-content .post-heading .post-Specialty:hover {
         background: #f36c3d;
         color: white; }
   /* line 144, ../sass/modules/_posts.scss */
@@ -1546,7 +1546,7 @@ input[type="submit"], button, .button, .auth-buttons #login-buttons #login-butto
     background: #00aced; }
 
 /* line 121, ../sass/modules/_forms.scss */
-.category-slug {
+.Specialty-slug {
   font-size: 12px;
   float: left;
   width: 80%;

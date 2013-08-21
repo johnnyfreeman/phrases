@@ -13,11 +13,11 @@ Template.post_edit.helpers({
     var post= Posts.findOne(Session.get('selectedPostId'));
     return moment(post.createdAt).format("MMMM Do, h:mm:ss a");
   },
-  categories: function(){
+  specialties: function(){
     var post = this;
-    return Categories.find().map(function(category) {
-      category.checked = _.contains(_.pluck(post.categories, '_id'), category._id) ? 'checked' : '';
-      return category;
+    return Specialties.find().map(function(specialty) {
+      specialty.checked = _.contains(_.pluck(post.specialties, '_id'), specialty._id) ? 'checked' : '';
+      return specialty;
     });
   },
   isApproved: function(){
@@ -82,22 +82,22 @@ Template.post_edit.events = {
 
     var selectedPostId=Session.get('selectedPostId');
     var post = Posts.findOne(selectedPostId);
-    var categories = [];
+    var specialties = [];
     var url = $('#url').val();
     var shortUrl = $('#short-url').val();
     var status = parseInt($('input[name=status]:checked').val());
 
-    $('input[name=category]:checked').each(function() {
-      var categoryId = $(this).val();
-      if(category = Categories.findOne(categoryId))
-        categories.push(category);
+    $('input[name=specialty]:checked').each(function() {
+      var specialtyId = $(this).val();
+      if(specialty = Specialties.findOne(specialtyId))
+        specialties.push(specialty);
     });
 
     var properties = {
       headline:         $('#title').val(),
       shortUrl:         shortUrl,
       body:             instance.editor.exportFile(),
-      categories:       categories,
+      specialties:       specialties,
     };
 
     if(url){

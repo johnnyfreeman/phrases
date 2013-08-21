@@ -2,7 +2,7 @@
   Meteor.Router.beforeRouting = function() {
     console.log('// Before Routing //')
     // reset all session variables that might be set by the previous route
-    Session.set('categorySlug', null);
+    Session.set('specialtySlug', null);
 
     // currentScroll stores the position of the user in the page
     Session.set('currentScroll', null);
@@ -93,11 +93,11 @@
     return 'unsubscribe';
   }
 
-  category = function(categorySlug, view){
+  specialty = function(specialtySlug, view){
     var view = (typeof view === 'undefined') ? 'top' : view;
-    console.log('setting category slug to: '+categorySlug)
-    Session.set('categorySlug', categorySlug);
-    Meteor.Router.categoryFilter = true;
+    console.log('setting specialty slug to: '+specialtySlug)
+    Session.set('specialtySlug', specialtySlug);
+    Meteor.Router.specialtyFilter = true;
     return 'posts_'+view;
   }
 
@@ -112,8 +112,8 @@
     '/pending':'posts_pending',
     '/digest/:year/:month/:day': digest,
     '/digest': digest,
-    '/c/:category_slug/:view': category,
-    '/c/:category_slug': category,
+    '/c/:specialty_slug/:view': specialty,
+    '/c/:specialty_slug': specialty,
     '/signin':'user_signin',
     '/signup':'user_signup',
     '/submit':'post_submit',
@@ -128,7 +128,7 @@
     '/comments/:id/edit': comment_edit,
     '/settings':'settings',
     '/toolbox':'toolbox',
-    '/categories':'categories',
+    '/specialties':'specialties',
     '/users':'users',
     '/account':'user_edit',
     '/forgot_password':'user_password',
@@ -256,7 +256,7 @@
   Meteor.Router.filter('canPost', {only: ['posts_pending', 'comment_reply', 'post_submit']});
   Meteor.Router.filter('canEdit', {only: ['post_edit', 'comment_edit']});
   Meteor.Router.filter('requirePost', {only: ['post_page', 'post_edit']});
-  Meteor.Router.filter('isAdmin', {only: ['posts_pending', 'users', 'settings', 'categories', 'admin']});
+  Meteor.Router.filter('isAdmin', {only: ['posts_pending', 'users', 'settings', 'specialties', 'admin']});
   Meteor.Router.filter('setRequestTimestamp', {only: ['post_page']});
 
   Meteor.startup(function() {

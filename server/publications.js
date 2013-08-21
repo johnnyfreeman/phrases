@@ -57,6 +57,6 @@ Meteor.publish('notifications', function() {
   return Notifications.find({userId:this.userId});
 });
 
-Meteor.publish('categories', function() {
-  return Categories.find();
+Meteor.publish('specialties', function() {
+  return Specialties.find();
 });

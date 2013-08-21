@@ -1,7 +1,7 @@
 // Session variables
 Session.set('initialLoad', true);
 Session.set('currentDate', new Date());
-Session.set('categorySlug', null);
+Session.set('specialtySlug', null);
 Session.set('singlePostReady', false);
 
 // Settings
@@ -11,8 +11,8 @@ Meteor.subscribe('settings', function(){
   Session.set('settingsLoaded',true);
 });
 
-// Categories
-Meteor.subscribe('categories');
+// Specialties
+Meteor.subscribe('specialties');
 
 // Users
 Meteor.subscribe('currentUser');
@@ -60,22 +60,22 @@ postListSubscription = function(find, options, per_page) {
 
 // note: the "name" property is for internal debugging purposes only
 selectTop = function() {
-  return selectPosts({name: 'top', status: STATUS_APPROVED, slug: Session.get('categorySlug')});
+  return selectPosts({name: 'top', status: STATUS_APPROVED, slug: Session.get('specialtySlug')});
 }
 topPostsHandle = postListSubscription(selectTop, sortPosts('score'), 10);
 
 selectNew = function() {
-  return selectPosts({name: 'new', status: STATUS_APPROVED, slug: Session.get('categorySlug')});
+  return selectPosts({name: 'new', status: STATUS_APPROVED, slug: Session.get('specialtySlug')});
 }
 newPostsHandle = postListSubscription(selectNew, sortPosts('submitted'), 10);  
 
 selectBest = function() {
-  return selectPosts({name: 'best', status: STATUS_APPROVED, slug: Session.get('categorySlug')});
+  return selectPosts({name: 'best', status: STATUS_APPROVED, slug: Session.get('specialtySlug')});
 }
 bestPostsHandle = postListSubscription(selectBest, sortPosts('baseScore'), 10);  
 
 selectPending = function() {
-  return selectPosts({name: 'pending', status: STATUS_PENDING, slug: Session.get('categorySlug')});
+  return selectPosts({name: 'pending', status: STATUS_PENDING, slug: Session.get('specialtySlug')});
 }
 pendingPostsHandle = postListSubscription(selectPending, sortPosts('createdAt'), 10);
 
