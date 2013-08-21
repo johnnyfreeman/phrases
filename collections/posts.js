@@ -15,7 +15,7 @@ Posts.deny({
     if(isAdminById(userId))
       return false;
     // may only edit the following fields:
-    return (_.without(fieldNames, 'headline', 'url', 'body', 'shortUrl', 'shortTitle', 'specialties').length > 0);
+    return (_.without(fieldNames, 'headline', 'body', 'shortUrl', 'shortTitle', 'specialties').length > 0);
   }
 });
 
@@ -28,7 +28,6 @@ Meteor.methods({
         submitted = parseInt(post.submitted) || new Date().getTime(),
         defaultStatus = getSetting('requirePostsApproval') ? STATUS_PENDING : STATUS_APPROVED,
         status = post.status || defaultStatus,
-        postWithSameLink = Posts.findOne({url: post.url}),
         timeSinceLastPost=timeSinceLast(user, Posts),
         numberOfPostsInPast24Hours=numberOfItemsInPast24Hours(user, Posts),
         postInterval = Math.abs(parseInt(getSetting('postInterval', 30))),
@@ -43,12 +42,6 @@ Meteor.methods({
     if(!post.headline)
       throw new Meteor.Error(602, 'Please fill in a headline');
 
-    // check that there are no previous posts with the same link
-    if(post.url && postWithSameLink){
-      Meteor.call('upvotePost', postWithSameLink._id);
-      throw new Meteor.Error(603, 'This link has already been posted', postWithSameLink._id);
-    }
-
     if(!isAdmin(Meteor.user())){
       // check that user waits more than X seconds between posts
       if(!this.isSimulation && timeSinceLastPost < postInterval)
@@ -57,23 +50,6 @@ Meteor.methods({
       // check that the user doesn't post more than Y posts per day
       if(!this.isSimulation && numberOfPostsInPast24Hours > maxPostsPer24Hours)
         throw new Meteor.Error(605, 'Sorry, you cannot submit more than '+maxPostsPer24Hours+' posts per day');
-    }
-
-    // shorten URL
-    if(!this.isSimulation && (token=getSetting('bitlyToken'))){
-      var shortenResponse = Meteor.http.get(
-        "https://api-ssl.bitly.com/v3/shorten?",
-        {
-          timeout: 5000,
-          params:{
-            "format": "json",
-            "access_token": token,
-            "longUrl": post.url
-          }
-        }
-      );
-      if(shortenResponse.statusCode == 200)
-        post.shortUrl = shortenResponse.data.data.url
     }
 
     post = _.extend(post, {

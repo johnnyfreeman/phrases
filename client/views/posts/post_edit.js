@@ -51,9 +51,6 @@ Template.post_edit.helpers({
   },
   hasStatusRejected: function(){
     return this.status == STATUS_REJECTED ? 'checked' : '';
-  },
-  shorten: function(){
-    return !!getSetting('bitlyToken');
   }
 });
 
